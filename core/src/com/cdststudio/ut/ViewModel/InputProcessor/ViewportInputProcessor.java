@@ -35,6 +35,15 @@ public class ViewportInputProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        /*
+        System.out.println("##########################");
+        System.out.println(DeviceX);
+        System.out.println(DeviceY);
+        System.out.println(screenX);
+        System.out.println(screenY);
+        System.out.println((int)camera.viewportWidth);
+        System.out.println((int)camera.viewportHeight);
+         */
         return false;
     }
 
@@ -55,7 +64,7 @@ public class ViewportInputProcessor implements InputProcessor {
         float x = Gdx.input.getDeltaX();
         float y = Gdx.input.getDeltaY();
 
-        if (CanMove(screenX, screenY)) camera.translate(-x,y);
+        camera.translate(-x,y);
         return true;
     }
 
@@ -72,9 +81,9 @@ public class ViewportInputProcessor implements InputProcessor {
     /**
      * Custom Method
      */
+    
+    // Viewport 이동 제어 메서드
     private boolean CanMove(int screenX, int screenY) {
-        System.out.println(screenX);
-        System.out.println(screenY);
         if (((int)camera.viewportWidth / 2) + screenX > DeviceX) return false;
         else if (((int)camera.viewportWidth / 2) - screenX < 0) return false;
         else if (((int)camera.viewportHeight / 2) + screenY > DeviceY) return false;
