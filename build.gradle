@@ -84,6 +84,7 @@ project(":core") {
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        // 캐릭터 제작을 위해 추가한 tools 라이브러리 (제작 다 되면 삭제)
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
     }
 }

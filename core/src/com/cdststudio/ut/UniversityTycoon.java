@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cdststudio.ut.ViewModel.InputProcessor.ViewportInputProcessor;
+import com.cdststudio.ut.ViewModel.Object.NPC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +25,9 @@ public class UniversityTycoon extends ApplicationAdapter{
 	private ViewportInputProcessor vip;
 	private ExtendViewport viewport;
 
-	private static ArrayList<String> atlasPaths = new ArrayList<>(Arrays.asList("backWalkSheet", "frontWalkSheet", "leftWalkSheet", "rightWalkSheet"));
-	private ArrayList<TextureAtlas> characterAtlases;
-	private ArrayList<Animation<TextureRegion>> characterAnima;
+	// 캐릭터 애니매이션 프레임 간격
 	private float elapsedTime = 0f;
+	private NPC npc;
 
 	Texture img;
 	float viewportWidth, viewportHeight;
@@ -50,13 +50,8 @@ public class UniversityTycoon extends ApplicationAdapter{
 		sprite = new Sprite(img, (int)0, (int)0, (int)Size_Width, (int)Size_Height); // 실제 이미지 Sprite할 크기 설정
 		sprite.setPosition(viewportWidth/2-Size_Width/2, viewportHeight/2-Size_Height/2); // 이미지 위치 값 중심에 맞추기
 
-		// 캐릭터 설정
-		characterAtlases = new ArrayList<>();
-		characterAnima = new ArrayList<>();
-		for(int i = 0; i < atlasPaths.size(); i++) {
-			characterAtlases.add(new TextureAtlas(Gdx.files.internal("character/w1/" + atlasPaths.get(i) + "/pack.atlas")));
-			characterAnima.add(new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(0.5f, characterAtlases.get(i).getRegions()));
-		}
+		// NPC 설정
+		npc = new NPC("w1");
 
 		// 배경 설정
 		backgroundTexture = new Texture("test.jpg");
@@ -79,7 +74,7 @@ public class UniversityTycoon extends ApplicationAdapter{
 	@Override
 	public void render () {
 		// create에서 초기화 했던걸 그려주는 단계, 프로그램 종료시까지 반복 실행
-		elapsedTime += Gdx.graphics.getDeltaTime();
+		elapsedTime += Gdx.graphics.getDeltaTime(); // 애니메이션 시간 설정
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -88,11 +83,15 @@ public class UniversityTycoon extends ApplicationAdapter{
 		ScreenUtils.clear(0, 0, 0, 1); // 배경색 설정
 
 		mainBatch.setProjectionMatrix(camera.combined); // 카메라 시점을 해당 객체에 고정
+
 		mainBatch.begin(); // .begin == 해당 객체 그리기 시작
 		backgroundSprite.draw(mainBatch); // 배경 그리기
-		for(int i = 0; i < atlasPaths.size(); i++) {
-			mainBatch.draw(characterAnima.get(i).getKeyFrame(elapsedTime, true), 400 + (i * 50), 400);
-		}
+		// NPC 배치
+		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), 400, 400);
+		mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400);
+		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500, 400);
+		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550, 400);
+		
 		mainBatch.draw(img, 0, 0); // 객체의 이미지 및 (x, y)위치 설정
 		mainBatch.end(); // 객체 그리기 끝
 	}
@@ -109,8 +108,5 @@ public class UniversityTycoon extends ApplicationAdapter{
 		// 객체들의 메모리 해제 단계
 		mainBatch.dispose(); // .dispose == 해당 객체의 메모리 해제
 		img.dispose();
-		for(int i = 0; i < atlasPaths.size(); i++) {
-			characterAtlases.get(i).dispose();
-		}
 	}
 }
