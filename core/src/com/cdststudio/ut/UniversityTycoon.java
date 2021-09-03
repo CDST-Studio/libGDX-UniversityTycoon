@@ -12,9 +12,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.cdststudio.ut.View.Total;
 import com.cdststudio.ut.ViewModel.InputProcessor.ViewportInputProcessor;
 import com.cdststudio.ut.ViewModel.Object.NPC;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -28,6 +28,7 @@ public class UniversityTycoon extends ApplicationAdapter{
 	// 캐릭터 애니매이션 프레임 간격
 	private float elapsedTime = 0f;
 	private NPC npc;
+
 
 	Texture img;
 	float viewportWidth, viewportHeight;
@@ -52,6 +53,7 @@ public class UniversityTycoon extends ApplicationAdapter{
 
 		// NPC 설정
 		npc = new NPC("w1");
+
 
 		// 배경 설정
 		backgroundTexture = new Texture("test.jpg");
@@ -92,6 +94,9 @@ public class UniversityTycoon extends ApplicationAdapter{
 		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500, 400);
 		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550, 400);
 		
+		//인터페이스 그리기
+		mainBatch.draw(new Total().drawInterface(), 1, 1, 1, 1);
+
 		mainBatch.draw(img, 0, 0); // 객체의 이미지 및 (x, y)위치 설정
 		mainBatch.end(); // 객체 그리기 끝
 	}
