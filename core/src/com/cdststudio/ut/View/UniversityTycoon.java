@@ -1,4 +1,4 @@
-package com.cdststudio.ut;
+package com.cdststudio.ut.View;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -26,7 +26,7 @@ public class UniversityTycoon extends ApplicationAdapter{
 	private ExtendViewport viewport;
 
 	// 캐릭터 애니매이션 프레임 간격
-	private float elapsedTime = 0f;
+	private float elapsedTime = 0F;
 	private NPC npc;
 
 	Texture img;
@@ -87,10 +87,10 @@ public class UniversityTycoon extends ApplicationAdapter{
 		mainBatch.begin(); // .begin == 해당 객체 그리기 시작
 		backgroundSprite.draw(mainBatch); // 배경 그리기
 		// NPC 배치
-		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), 400, 400);
-		mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400);
-		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500, 400);
-		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550, 400);
+		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), 400, 400 + elapsedTime * 1.5F);
+		mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400 - elapsedTime * 1.5F);
+		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500 - elapsedTime * 1.5F, 400);
+		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550 + elapsedTime * 1.5F, 400);
 		
 		mainBatch.draw(img, 0, 0); // 객체의 이미지 및 (x, y)위치 설정
 		mainBatch.end(); // 객체 그리기 끝
