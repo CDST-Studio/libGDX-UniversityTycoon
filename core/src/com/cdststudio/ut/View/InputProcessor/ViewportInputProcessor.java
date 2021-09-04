@@ -1,4 +1,4 @@
-package com.cdststudio.ut.ViewModel.InputProcessor;
+package com.cdststudio.ut.View.InputProcessor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;

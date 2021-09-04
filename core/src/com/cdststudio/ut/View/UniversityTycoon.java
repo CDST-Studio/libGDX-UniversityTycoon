@@ -5,18 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.cdststudio.ut.ViewModel.InputProcessor.ViewportInputProcessor;
-import com.cdststudio.ut.ViewModel.Object.NPC;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.cdststudio.ut.View.InputProcessor.ViewportInputProcessor;
+import com.cdststudio.ut.Model.NPC;
+import com.cdststudio.ut.Model.Tile;
 
 public class UniversityTycoon extends ApplicationAdapter{
 	private SpriteBatch mainBatch;
@@ -29,13 +24,21 @@ public class UniversityTycoon extends ApplicationAdapter{
 	private float elapsedTime = 0F;
 	private NPC npc;
 
+	// 배경
+	private Texture backgroundTexture;
+	private Sprite backgroundSprite;
+
+	// 오브젝트
+	private Texture it;
+	private Texture art;
+
+	// 타일
+	private Tile tile;
+
 	Texture img;
 	float viewportWidth, viewportHeight;
 	int Size_Width = 256;
 	int Size_Height = 256;
-
-	Texture backgroundTexture;
-	Sprite backgroundSprite;
 
 	@Override
 	public void create () {
@@ -51,10 +54,17 @@ public class UniversityTycoon extends ApplicationAdapter{
 		sprite.setPosition(viewportWidth/2-Size_Width/2, viewportHeight/2-Size_Height/2); // 이미지 위치 값 중심에 맞추기
 
 		// NPC 설정
-		npc = new NPC("w1");
+		npc = new NPC("w1", 400F, 400F);
+
+		// 오브젝트
+		it = new Texture("Buildings/IT.png");
+		art = new Texture("Buildings/Art.png");
+
+		// 타일
+		tile = new Tile(400, 400, 400, 500, new Texture("tile1.png"));
 
 		// 배경 설정
-		backgroundTexture = new Texture("test.jpg");
+		backgroundTexture = new Texture("background.jpg");
 		backgroundSprite = new Sprite(backgroundTexture);
 
 		camera = new OrthographicCamera(); // 카메라 초기화 (2D 게임에서 주로 쓰는 카메라 OrthographicCamera)
@@ -86,12 +96,28 @@ public class UniversityTycoon extends ApplicationAdapter{
 
 		mainBatch.begin(); // .begin == 해당 객체 그리기 시작
 		backgroundSprite.draw(mainBatch); // 배경 그리기
+		// 타일 배치
+		if (tile.isHorizontal()) {
+			for (int x = tile.getStartX(); x < tile.getEndX(); x += tile.getWidth()) {
+				mainBatch.draw(tile.getTileImg(), x, 400);
+			}
+		}else {
+			for (int y = tile.getStartY(); y < tile.getEndY(); y += tile.getHeight()) {
+				mainBatch.draw(tile.getTileImg(), 400, y);
+			}
+		}
+
+
 		// NPC 배치
-		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), 400, 400 + elapsedTime * 1.5F);
-		mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400 - elapsedTime * 1.5F);
-		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500 - elapsedTime * 1.5F, 400);
-		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550 + elapsedTime * 1.5F, 400);
-		
+		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), npc.getX(), npc.getY());
+		// mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400 - elapsedTime * 1.5F);
+		// mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500 - elapsedTime * 1.5F, 400);
+		// mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550 + elapsedTime * 1.5F, 400);
+
+		// 오브젝트 배치
+		mainBatch.draw(it, 700, 400);
+		mainBatch.draw(art, 900, 400);
+
 		mainBatch.draw(img, 0, 0); // 객체의 이미지 및 (x, y)위치 설정
 		mainBatch.end(); // 객체 그리기 끝
 	}

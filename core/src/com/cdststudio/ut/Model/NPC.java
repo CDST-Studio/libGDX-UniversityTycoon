@@ -1,4 +1,4 @@
-package com.cdststudio.ut.ViewModel.Object;
+package com.cdststudio.ut.Model;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,7 +16,13 @@ public class NPC {
     private ArrayList<TextureAtlas> charaAtlas;
     private ArrayList<Animation<TextureRegion>> charaAnima;
 
-    public NPC(String charaName) {
+    private float x;
+    private float y;
+    private int direction = 0;
+
+    public NPC(String charaName, float x, float y) {
+        this.x = x;
+        this.y = y;
         this.charaName = charaName;
         this.charaAtlas = new ArrayList<>();
         this.charaAnima = new ArrayList<>();
@@ -39,5 +45,10 @@ public class NPC {
     public Animation<TextureRegion> getRightMove() {
         return charaAnima.get(3);
     }
+    public float getX() { return x; }
+    public float getY() { return y; }
+    public int getDirection() { return direction; }
 
+    public void setX(float x) { this.x = x; }
+    public void setY(float y) { this.y = y; }
 }
