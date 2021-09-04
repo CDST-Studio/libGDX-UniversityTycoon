@@ -5,13 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cdststudio.ut.View.InputProcessor.ViewportInputProcessor;
 import com.cdststudio.ut.Model.NPC;
 import com.cdststudio.ut.Model.Tile;
+import com.cdststudio.ut.View.Total;
 
 public class UniversityTycoon extends ApplicationAdapter{
 	private SpriteBatch mainBatch;
@@ -39,6 +43,9 @@ public class UniversityTycoon extends ApplicationAdapter{
 	float viewportWidth, viewportHeight;
 	int Size_Width = 256;
 	int Size_Height = 256;
+
+	Texture backgroundTexture;
+	Sprite backgroundSprite;
 
 	@Override
 	public void create () {
@@ -107,6 +114,8 @@ public class UniversityTycoon extends ApplicationAdapter{
 			}
 		}
 
+		//인터페이스 그리기
+		mainBatch.draw(new Total().drawInterface(), 1, 1, 1, 1);
 
 		// NPC 배치
 		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), npc.getX(), npc.getY());
