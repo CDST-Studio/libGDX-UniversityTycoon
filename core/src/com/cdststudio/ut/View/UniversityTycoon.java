@@ -44,9 +44,6 @@ public class UniversityTycoon extends ApplicationAdapter{
 	int Size_Width = 256;
 	int Size_Height = 256;
 
-	Texture backgroundTexture;
-	Sprite backgroundSprite;
-
 	@Override
 	public void create () {
 		// 초기화 단계
@@ -114,8 +111,8 @@ public class UniversityTycoon extends ApplicationAdapter{
 			}
 		}
 
-		//인터페이스 그리기
-		mainBatch.draw(new Total().drawInterface(), 1, 1, 1, 1);
+		// 인터페이스 그리기
+		mainBatch.draw(new Total().drawInterface(), 430, 500,175,120);
 
 		// NPC 배치
 		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), npc.getX(), npc.getY());
