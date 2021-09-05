@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.cdststudio.ut.View.SatitionInterface;
 import com.cdststudio.ut.View.InputProcessor.ViewportInputProcessor;
 import com.cdststudio.ut.Model.NPC;
 import com.cdststudio.ut.Model.Tile;
@@ -100,6 +101,15 @@ public class UniversityTycoon extends ApplicationAdapter{
 
 		mainBatch.begin(); // .begin == 해당 객체 그리기 시작
 		backgroundSprite.draw(mainBatch); // 배경 그리기
+		// NPC 배치
+		mainBatch.draw(npc.getBackMove().getKeyFrame(elapsedTime, true), 400, 400 + elapsedTime * 1.5F);
+		mainBatch.draw(npc.getFrontMove().getKeyFrame(elapsedTime, true), 450, 400 - elapsedTime * 1.5F);
+		mainBatch.draw(npc.getLeftMove().getKeyFrame(elapsedTime, true), 500 - elapsedTime * 1.5F, 400);
+		mainBatch.draw(npc.getRightMove().getKeyFrame(elapsedTime, true), 550 + elapsedTime * 1.5F, 400);
+		
+		//인터페이스 그리기
+		mainBatch.draw(new Total().drawInterface(), 430, 410, 175, 200);
+		mainBatch.draw(new SatitionInterface().drawInterface(), 430, 500,175,120);
 		// 타일 배치
 		if (tile.isHorizontal()) {
 			for (int x = tile.getStartX(); x < tile.getEndX(); x += tile.getWidth()) {
