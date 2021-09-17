@@ -58,7 +58,7 @@ public class UniversityTycoon extends ApplicationAdapter{
 		tile = new Tile(400, 400, 400, 500, new Texture("tile1.png"));
 
 		// NPC 설정
-		npc = new NPC("w1", tile,400F, 400F);
+		npc = new NPC("w1", tile, (tile.getStartX() + tile.getEndX()) >> 1, (tile.getStartY() + tile.getEndX()) >> 1);
 
 		// 배경 설정
 		backgroundTexture = new Texture("background.jpg");

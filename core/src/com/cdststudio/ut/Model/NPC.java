@@ -19,6 +19,7 @@ public class NPC {
     private ArrayList<Animation<TextureRegion>> charaAnima;
 
     private Tile belongedTile;
+    private float sinceWalking;
     private int direction;
     private float x;
     private float y;
@@ -27,6 +28,7 @@ public class NPC {
         this.belongedTile = belongedTile;
         this.x = x;
         this.y = y;
+        this.sinceWalking = 0F;
         this.charaName = charaName;
         this.charaAtlas = new ArrayList<>();
         this.charaAnima = new ArrayList<>();
@@ -63,33 +65,45 @@ public class NPC {
     public void setY(float y) { this.y = y; }
 
     public void drawNPC(SpriteBatch mainBatch, float elapsedTime) {
-        switch (direction) {
+        switch (this.direction) {
             case 0:
-                if (this.getY() + (elapsedTime * 2F) < belongedTile.getEndY()) mainBatch.draw(this.getBackMove().getKeyFrame(elapsedTime, true), this.getX(), this.getY() + (elapsedTime * 2F));
+                if (this.getY() + ((elapsedTime - sinceWalking) * 1.75F) < belongedTile.getEndY()) {
+                    mainBatch.draw(this.getBackMove().getKeyFrame((elapsedTime - sinceWalking), true), this.getX(), this.getY() + ((elapsedTime - sinceWalking) * 1.75F));
+                }
                 else {
-                    elapsedTime = 0;
-                    this.direction++;
+                    sinceWalking = elapsedTime;
+                    direction = 1;
+                    y = belongedTile.getEndY();
                 }
                 break;
             case 1:
-                if (this.getY() - (elapsedTime * 2F) > belongedTile.getStartY()) mainBatch.draw(this.getFrontMove().getKeyFrame(elapsedTime, true), this.getX(), this.getY() - (elapsedTime * 2F));
+                if (this.getY() - ((elapsedTime - sinceWalking) * 1.75F) > belongedTile.getStartY()) {
+                    mainBatch.draw(this.getFrontMove().getKeyFrame((elapsedTime - sinceWalking), true), this.getX(), this.getY() - ((elapsedTime - sinceWalking) * 1.75F));
+                }
                 else {
-                    elapsedTime = 0;
-                    this.direction--;
+                    sinceWalking = elapsedTime;
+                    direction = 0;
+                    y = belongedTile.getStartY();
                 }
                 break;
             case 2:
-                if (this.getX() - (elapsedTime * 2F) > belongedTile.getStartX()) mainBatch.draw(this.getLeftMove().getKeyFrame(elapsedTime, true), this.getX() - (elapsedTime * 2F), this.getY());
+                if (this.getX() - ((elapsedTime - sinceWalking) * 1.75F) > belongedTile.getStartX()) {
+                    mainBatch.draw(this.getLeftMove().getKeyFrame((elapsedTime - sinceWalking), true), this.getX() - ((elapsedTime - sinceWalking) * 1.75F), this.getY());
+                }
                 else {
-                    elapsedTime = 0;
-                    this.direction++;
+                    sinceWalking = elapsedTime;
+                    direction = 3;
+                    x = belongedTile.getEndX();
                 }
                 break;
             case 3:
-                if (this.getX() + (elapsedTime * 2F) < belongedTile.getEndX()) mainBatch.draw(this.getRightMove().getKeyFrame(elapsedTime, true), this.getX() + (elapsedTime * 2F), this.getY());
+                if (this.getX() + ((elapsedTime - sinceWalking) * 1.75F) < belongedTile.getEndX()) {
+                    mainBatch.draw(this.getRightMove().getKeyFrame((elapsedTime - sinceWalking), true), this.getX() + ((elapsedTime - sinceWalking) * 1.75F), this.getY());
+                }
                 else {
-                    elapsedTime = 0;
-                    this.direction--;
+                    sinceWalking = elapsedTime;
+                    direction = 2;
+                    x = belongedTile.getStartX();
                 }
                 break;
             default:
