@@ -2,16 +2,27 @@ package com.cdststudio.ut;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cdststudio.ut.View.InputProcessor.ViewportInputProcessor;
 import com.cdststudio.ut.Model.NPC;
 import com.cdststudio.ut.Model.Tile;
+
+import org.lwjgl.Sys;
+
+import java.util.Iterator;
 
 public class UniversityTycoon extends ApplicationAdapter{
 	private SpriteBatch mainBatch;
@@ -23,16 +34,14 @@ public class UniversityTycoon extends ApplicationAdapter{
 	private float elapsedTime = 0F;
 	private NPC npc;
 
-	// 배경
-	private Texture backgroundTexture;
-	private Sprite backgroundSprite;
-
 	// 오브젝트
 	private Texture it;
 	private Texture art;
 
 	// 타일
 	private Tile tile;
+	private TiledMap tiledMap;
+	private OrthogonalTiledMapRenderer renderer;
 
 	float viewportWidth, viewportHeight;
 	int Size_Width = 256;
@@ -42,9 +51,9 @@ public class UniversityTycoon extends ApplicationAdapter{
 	public void create () {
 		// 초기화 단계
 
-		// 디바이스 크기 가져오기
-		viewportWidth = Gdx.app.getGraphics().getWidth(); // 디바이스의 X 크기
-		viewportHeight = Gdx.app.getGraphics().getHeight(); // 디바이스의 Y 크기
+		// Viewport 크기 설정, Gdx.app.getGraphics().getWidth(); // 디바이스의 X 크기
+		viewportWidth = Gdx.app.getGraphics().getWidth();
+		viewportHeight = Gdx.app.getGraphics().getHeight();
 
 		mainBatch = new SpriteBatch(); // ima를 Sprite 시키기 위한 객체
 		// sprite = new Sprite(img, (int)0, (int)0, (int)Size_Width, (int)Size_Height); // 실제 이미지 Sprite할 크기 설정
@@ -56,22 +65,30 @@ public class UniversityTycoon extends ApplicationAdapter{
 
 		// 타일
 		tile = new Tile(400, 400, 400, 500, new Texture("tile1.png"));
+		tiledMap = new TmxMapLoader().load("tiledMap.tmx");
+		// Layer count = 1, Object count = 0
+		System.out.println(tiledMap.getLayers().get(0).getObjects().getCount());
+		// Tilesets size = 1, Tileset size = 1
+		System.out.println(tiledMap.getLayers().get(0));
+		for (Iterator<String> iter = tiledMap.getLayers().get(0).getProperties().getKeys(); iter.hasNext(); ) {
+			String key = iter.next();
+			System.out.println(key);
+		}
+
+		renderer = new OrthogonalTiledMapRenderer(tiledMap);
 
 		// NPC 설정
 		npc = new NPC("w1", tile, (tile.getStartX() + tile.getEndX()) >> 1, (tile.getStartY() + tile.getEndX()) >> 1);
 
-		// 배경 설정
-		backgroundTexture = new Texture("background.jpg");
-		backgroundSprite = new Sprite(backgroundTexture);
+		// 카메라 초기화 (2D 게임에서 주로 쓰는 카메라 OrthographicCamera)
+		camera = new OrthographicCamera();
 
-		camera = new OrthographicCamera(); // 카메라 초기화 (2D 게임에서 주로 쓰는 카메라 OrthographicCamera)
-
-		//Viewport(사용자에게 보여지는 영역) 크기 설정 (시점 이동까지 설정된 것은 X)
+		// Viewport(사용자에게 보여지는 영역) 크기 설정
 		viewport = new ExtendViewport(1000,1000, camera);
 		viewport.apply();
 
-		/** 줌 배율 = 기본 0.4, 최대 축소 1 */
-		camera.zoom = 0.4F; // 카메라 줌 설정 (1배 Ex. 2.0F == 1/2배, 0.5F == 2배 줌)
+		/** 줌 배율 = 기본 0.5, 최대 축소 1 */
+		camera.zoom = 0.5F; // 카메라 줌 설정 (1배 Ex. 2.0F == 1/2배, 0.5F == 2배 줌)
 
 		// InputProcessor 설정
 		vip = new ViewportInputProcessor(camera, viewportWidth, viewportHeight); // 카메라(viewport)를 위한 InputProcessor 초기화
@@ -88,7 +105,9 @@ public class UniversityTycoon extends ApplicationAdapter{
 		mainBatch.setProjectionMatrix(camera.combined); // 카메라 시점을 해당 객체에 고정
 
 		mainBatch.begin(); // .begin == 해당 객체 그리기 시작
-		backgroundSprite.draw(mainBatch); // 배경 그리기
+		// 타일맵 배치
+		renderer.setView(camera);
+		renderer.render();
 		tile.drawTile(mainBatch); // 타일 배치
 		npc.drawNPC(mainBatch, elapsedTime); // NPC 배치, 해당 타일 만큼만 걷도록
 		mainBatch.draw(it, 700, 400); // 오브젝트 그리기
